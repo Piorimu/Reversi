@@ -23,21 +23,12 @@ function Board( width, height ){
 			mBoard[ y * BOARD_WIDTH + x ] = -1;
 		}
 	}
-	
-	//初期配置
-	//○●
-	//●○
-	setBoard( BOARD_WIDTH / 2 - 1, BOARD_HEIGHT / 2 - 1, 0 );
-	setBoard( BOARD_WIDTH / 2, BOARD_HEIGHT / 2 - 1, 1 );
-	setBoard( BOARD_WIDTH / 2 - 1, BOARD_HEIGHT / 2, 1 );
-	setBoard( BOARD_WIDTH / 2, BOARD_HEIGHT / 2, 0 );
-	
+
 	//ボード操作
 	//(x,y)をboardにする。石の裏返し等は行わない。
-	this.setBoard( x, y, board ){
+	this.setBoard = function( x, y, board ){
 		//範囲チェック
-		if( x < 0 || x > BOARD_WIDTH ||
-			y < 0 || y > BOARD_HEIGHT ){
+		if( x < 0 || x > BOARD_WIDTH || y < 0 || y > BOARD_HEIGHT ){
 			return null;
 		}
 		
@@ -46,10 +37,9 @@ function Board( width, height ){
 	
 	//石を置く
 	//(x,y)にwobの石を置いて、裏返し処理を行う。
-	this.PutStone( x, y, wob ){
+	this.PutStone = function( x, y, wob ){
 		//範囲チェック
-		if( x < 0 || x > BOARD_WIDTH ||
-			y < 0 || y > BOARD_HEIGHT ){
+		if( x < 0 || x > BOARD_WIDTH || y < 0 || y > BOARD_HEIGHT ){
 			return null;
 		}
 		
@@ -63,8 +53,34 @@ function Board( width, height ){
 		//:TODO 石の裏返し
 	}
 	
+	this.Init = function(){
+		//初期配置
+		//○●
+		//●○
+		this.setBoard( BOARD_WIDTH / 2 - 1, BOARD_HEIGHT / 2 - 1, 0 );
+		this.setBoard( BOARD_WIDTH / 2, BOARD_HEIGHT / 2 - 1, 1 );
+		this.setBoard( BOARD_WIDTH / 2 - 1, BOARD_HEIGHT / 2, 1 );
+		this.setBoard( BOARD_WIDTH / 2, BOARD_HEIGHT / 2, 0 );
+	}
+	
 	//ボード描画
-	this.draw(){
-		
+	this.draw = function(){
+		for( y = 0; y < BOARD_HEIGHT; y++ ){
+			for( x = 0; x < BOARD_WIDTH; x++ ){
+				var tx = x * 50;
+				var ty = y * 50;
+				
+				gIManager.DrawImage( "BoardCell.gif", tx, ty );
+				
+				switch( mBoard[ y * BOARD_WIDTH + x ] ){
+					case 0:	//白
+						gIManager.DrawImage( "Stones.gif", 0, 0, 48, 48, tx + 1, ty + 1);
+						break;
+					case 1: 	//黒
+						gIManager.DrawImage( "Stones.gif", 48, 0, 48, 48, tx + 1, ty + 1);					
+						break;
+				}
+			}
+		}
 	}
 }

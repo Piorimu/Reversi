@@ -20,6 +20,41 @@ var spaceKey = false;
 var spaceKeyToggle = false;
 // This function is called on page load.
 
+
+function Game( ctx ){
+	var mCtx = ctx
+	
+	var mBoard;
+	
+	//初期化
+	this.Init = function(){
+		//画像ロード
+		gIManager.LoadImage( "BoardCell.gif" );
+		gIManager.LoadImage( "Stones.gif" );
+		
+		mBoard = new Board( 8, 8 );
+		mBoard.Init();
+		
+	}
+	
+	//更新
+	this.update = function(){
+		
+		this.draw();
+	}
+	
+	//画面描画
+	this.draw = function(){
+		mCtx.clearRect( 0, 0, boardX, boardY );
+		
+		mBoard.draw();
+	}
+}
+
+function GameLoop(){
+	gGame.update();
+}
+
 window.onload = function() {
 	// Get the canvas element.
 	canvas = document.getElementById("gameBoard");
@@ -31,8 +66,9 @@ window.onload = function() {
 	  
 		gIManager = new ImageManager( ctx );
 		
-		//初期化
-		gBoard = new Board( 8, 8 );
+		//ゲームクラス作成
+		gGame = new Game( ctx );
+		gGame.Init();
 
 		// Play the game until the ball stops.
 		gameLoop = setInterval(GameLoop, 16);
@@ -46,82 +82,7 @@ window.onload = function() {
 	}
 }
 
-function Game(){
-	var mBoard;
-	
-	//初期化
-	this.Init(){
-		//画像ロード
-		gIManager.LoadImage( "BoardCell.jpg" );
-		gIManager.LoadImage( "Stones.gif" );
-	}
-}
-function drawBall() {
-
-	// Clear the board.
-	ctx.clearRect(0, 0, boardX, boardY);
-
-	// Fill the board.
-	gIManager.DrawImage( "back.jpg", 0, 0 );
-
-	gStage.drawBlocks( ctx );
-
-	// Draw a ball.
-	gBall.draw( ctx );
-
-	// Draw the paddle.
-	gIManager.DrawImage( "paddle.gif", paddleX, paddleD );        
-
-	if( leftKey == true ){
-		paddleX = paddleX - 4;
-		if (paddleX < 0) paddleX = 0;
-	}
-	if( rightKey == true ){
-		paddleX = paddleX + 4;
-		if (paddleX > boardX - paddleW) paddleX = boardX - paddleW;
-	}
-	
-	if( gStage.isGameClear() == true ){
-		//一番目の引数が表示したい文字、2番目がX座標、3番目がY座標
-		ctx.fillStyle = "#00ff99";
-		ctx.font = "50px 'Times New Roman'";
-		ctx.fillText("GameClear!!!!", 50, 160, 200); 
-		ctx.fillStyle = "#00ff99";
-		ctx.font = "20px 'Times New Roman'";
-		ctx.fillText("Num Retry:" + Retry, 50, 210, 200);
-		if( spaceKey == true ){
-			isBallset = true;
-			spaceKeyToggle = true;
-			StageNum = StageNum % 3 + 1;
-			//初期化処理
-			gStage.LoadStage( "./stage" + StageNum + ".txt" );
-		}			
-	}else{
-		if( gBall.update() == -1 ){
-			//一番目の引数が表示したい文字、2番目がX座標、3番目がY座標
-			ctx.fillStyle = "red";
-			ctx.font = "50px 'Times New Roman'";
-			ctx.fillText("Miss!!!!", 50, 160, 200); 
-			
-			if( spaceKey == true ){
-				isBallset = true;
-				spaceKeyToggle = true;
-				Retry++;
-			}
-		}else{
-			if( spaceKey == true && spaceKeyToggle == false){
-				isBallset = false;
-			}else{
-				if( spaceKey == false ){
-					spaceKeyToggle = false;
-				}
-			}
-		}
-	}
-}
-
 // Get key press.
-
 
 function whatKeyDown(evt) {
 	switch (evt.keyCode) {

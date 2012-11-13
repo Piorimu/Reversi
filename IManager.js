@@ -29,8 +29,18 @@ function ImageManager( g ){
 	}
 	
 	//DrawImage
-	//引数の数を見て、各draw関数へ飛ばすだけ
+	//画像を描画する。
+	//擬似的にオーバーロードを実装するために、
+	//引数の数を見て、実際に描画する各draw関数へ飛ばす。
 	this.DrawImage = function( key, dsx, dsy, dsw, dsh, dx, dy, dw, dh ){
+		if( myImages[key] != null ){
+			//ローディング終了前に描画メソッドが呼ばれたら何もしない安定。
+			if( myImages[key].complete == false ){
+				return false;
+			}
+		}else{
+			return false;
+		}			
 		switch (arguments.length) {
 			case 3:
 				//dsx,dsyに画像を原寸で描画
@@ -50,51 +60,24 @@ function ImageManager( g ){
 				break;
 			default:
 		}
+		
+		return true;
 	}
 	
 	this.draw3 = function( key, dx, dy ){
-		if( myImages[key] != null ){
-			//ローディング終了前に描画メソッドが呼ばれたら何もしない安定。
-			if( myImages[key].complete == true ){
-				Graphic.drawImage( myImages[key], dx, dy );
-			}
-		}else{
-			return false;
-		}
-		return true;
+		Graphic.drawImage( myImages[key], dx, dy );
 	}
 	
 	this.draw5 = function( key, dx, dy, dw, dh ){
-		if( myImages[key] != null ){
-			if( myImages[key].complete == true ){
-				Graphic.drawImage( myImages[key], dx, dy, dw, dh );
-			}
-		}else{
-			return false;
-		}
-		return true;
+		Graphic.drawImage( myImages[key], dx, dy, dw, dh );
 	}
 	
 	this.draw7 = function( key, sx, sy, sw, sh, dx, dy ){
-		if( myImages[key] != null ){
-			if( myImages[key].complete == true ){
-				Graphic.drawImage( myImages[key], sx, sy, sw, sh, dx, dy, sw, sh );
-			}
-		}else{
-			return false;
-		}
-		return true;
+		Graphic.drawImage( myImages[key], sx, sy, sw, sh, dx, dy, sw, sh );
 	}
 	
 	this.draw9 = function( key, sx, sy, sw, sh, dx, dy, dw, dh ){
-		if( myImages[key] != null ){
-			if( myImages[key].complete == true ){
-				Graphic.drawImage( myImages[key], sx, sy, sw, sh, dx, dy, dw, dh );
-			}
-		}else{
-			return false;
-		}
-		return true;
+		Graphic.drawImage( myImages[key], sx, sy, sw, sh, dx, dy, dw, dh );
 	}
 	
 	//ローディング中かを返す
