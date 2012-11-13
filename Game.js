@@ -92,7 +92,7 @@ function Game( ctx ){
 	}
 	
 	this.Judgement = function(){
-		BlackWhite = mBoard.getNumStones( 0 ) > mBoard.getNumStones( 1 );
+		BlackWhite = mBoard.getNumStones( 0 ) < mBoard.getNumStones( 1 );
 		isEnd = true;
 	}
 	
