@@ -17,10 +17,6 @@ var gIManager;
 var gFManager = new FileManager();
 var gMouse;
 
-var leftKey = false;
-var rightKey = false;
-var spaceKey = false;
-var spaceKeyToggle = false;
 // This function is called on page load.
 
 
@@ -29,7 +25,7 @@ function Game( ctx ){
 	
 	var mBoard;
 	
-	var isPlayer = true;
+	var BlackWhite = false;	//次打つ色。false黒true白
 	
 	//初期化
 	this.Init = function(){
@@ -44,7 +40,16 @@ function Game( ctx ){
 	
 	//更新
 	this.update = function(){
+		//ゲーム進行
+		if( gMouse.LClick ){
+			mBoard.PutStone( parseInt(gMouse.X / 50), parseInt(gMouse.Y / 50), BlackWhite ? 1 : 0 );
+			BlackWhite = !BlackWhite;
+		}
+		
+		//描画
 		this.draw();
+		
+		//マウス状態更新
 		gMouse.update();
 	}
 	
@@ -91,52 +96,5 @@ window.onload = function() {
 		// Play the game until the ball stops.
 		gameLoop = setInterval(GameLoop, 16);
 
-		// Add keyboard listener.
-		window.addEventListener('keydown', whatKeyDown, false);
-
-		// Add keyboard listener.
-		window.addEventListener('keyup', whatKeyUp, false);
-
-	}
-}
-
-// Get key press.
-
-function whatKeyDown(evt) {
-	switch (evt.keyCode) {
-	// Left arrow.
-	case 37:
-		leftKey = true;
-	break;
-
-	// Right arrow.
-	case 39:
-		rightKey = true;
-	break;
-
-	//Space Key
-	case 32:
-	spaceKey = true;
-	break;          
-	}
-}
-
-function whatKeyUp(evt) {
-
-	switch (evt.keyCode) {
-	// Left arrow.
-	case 37:
-		leftKey = false;
-	break;
-
-	// Right arrow.
-	case 39:
-		rightKey = false;
-	break;
-
-	//Space Key
-	case 32:
-	spaceKey = false;
-	break;
 	}
 }

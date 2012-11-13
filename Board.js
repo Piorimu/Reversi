@@ -2,8 +2,8 @@
 //ボードクラス
 
 //-1:未配置
-//0:白
-//1:黒
+//0:黒
+//1:白
 function Board( width, height ){
 	//ボードの縦横のサイズが両方6~100マスで収まっているか
 	if( width < 6 || width > 100 || height < 6 || height > 100 ){
@@ -57,10 +57,10 @@ function Board( width, height ){
 		//初期配置
 		//○●
 		//●○
-		this.setBoard( BOARD_WIDTH / 2 - 1, BOARD_HEIGHT / 2 - 1, 0 );
-		this.setBoard( BOARD_WIDTH / 2, BOARD_HEIGHT / 2 - 1, 1 );
-		this.setBoard( BOARD_WIDTH / 2 - 1, BOARD_HEIGHT / 2, 1 );
-		this.setBoard( BOARD_WIDTH / 2, BOARD_HEIGHT / 2, 0 );
+		this.setBoard( BOARD_WIDTH / 2 - 1, BOARD_HEIGHT / 2 - 1, 1 );
+		this.setBoard( BOARD_WIDTH / 2, BOARD_HEIGHT / 2 - 1, 0 );
+		this.setBoard( BOARD_WIDTH / 2 - 1, BOARD_HEIGHT / 2, 0 );
+		this.setBoard( BOARD_WIDTH / 2, BOARD_HEIGHT / 2, 1 );
 	}
 	
 	//ボード描画
@@ -73,10 +73,10 @@ function Board( width, height ){
 				gIManager.DrawImage( "BoardCell.gif", tx, ty );
 				
 				switch( mBoard[ y * BOARD_WIDTH + x ] ){
-					case 0:	//白
+					case 0:	//黒
 						gIManager.DrawImage( "Stones.gif", 0, 0, 48, 48, tx + 1, ty + 1);
 						break;
-					case 1: 	//黒
+					case 1: 	//白
 						gIManager.DrawImage( "Stones.gif", 48, 0, 48, 48, tx + 1, ty + 1);					
 						break;
 				}
