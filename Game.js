@@ -28,6 +28,7 @@ function Game( ctx ){
 	
 	var BlackWhite = false;	//次打つ色。false黒true白
 	var isPrevNoPut = false;	//前の色で置く場所がなかったか
+	var isPass = false;
 	
 	var isEnd = false;	//試合が終わったか
 	
@@ -42,26 +43,23 @@ function Game( ctx ){
 	
 	//リセット
 	this.Reset = function(){
+		isEnd = false;
+		isPrevNoPut = false;
+		isPass = false;
+		
 		//先手は黒
 		BlackWhite = false;
 		//ボード初期化
 		mBoard = new Board( 8, 8 );
 		mBoard.Init();
-
-		if( !isEnd ){
-			mGameState.innerHTML = "";
-			//置けなくてパスした
-			if( isPrevNoPut ){
-				mGameState.innerHTML = "置く場所がないのでパスしました<br>";
-			}
-			//現在の手番を表示
-			mGameState.innerHTML += (BlackWhite ? "白" : "黒") + "の番です。";
-		}else{
-			mGameState.innerHTML = "黒" + mBoard.getNumStones( 0 ) + "個、白"+mBoard.getNumStones( 1 )+"個で、"+(BlackWhite ? "白" : "黒") + "が勝ちました。";
-		}		
 	}
 	
 	this.Pass = function(){
+		isPass = true;
+		this.NextTurn();
+	}
+	
+	this.NextTurn = function(){
 		BlackWhite = !BlackWhite;
 		//置けましたか？
 		if( !mBoard.isCanPut(BlackWhite) ){
@@ -77,19 +75,8 @@ function Game( ctx ){
 		}else{
 			isPrevNoPut = false;
 		}
-		
-		if( !isEnd ){
-			mGameState.innerHTML = "";
-			//置けなくてパスした
-			if( isPrevNoPut ){
-				mGameState.innerHTML = "置く場所がないのでパスしました<br>";
-			}
-			//現在の手番を表示
-			mGameState.innerHTML += (BlackWhite ? "白" : "黒") + "の番です。";
-		}else{
-			mGameState.innerHTML = "黒" + mBoard.getNumStones( 0 ) + "個、白"+mBoard.getNumStones( 1 )+"個で、"+(BlackWhite ? "白" : "黒") + "が勝ちました。";
-		}
 	}
+	
 	
 	this.Judgement = function(){
 		BlackWhite = mBoard.getNumStones( 0 ) < mBoard.getNumStones( 1 );
@@ -103,7 +90,8 @@ function Game( ctx ){
 			if( gMouse.LClick ){
 				var isPut = mBoard.PutStone( parseInt(gMouse.X / 50), parseInt(gMouse.Y / 50), BlackWhite ? 1 : 0 );
 				if( isPut == 0 ){	//置けた
-					this.Pass();
+					isPass = false;
+					this.NextTurn();
 				}
 			}
 		}
@@ -126,6 +114,19 @@ function Game( ctx ){
 		if( gMouse.LClick ){
 			gLog.value += "Click!";
 		}
+		
+		var str = "";
+		if( !isEnd ){
+			//置けなくてパスした
+			if( isPass ){
+				str = "パスしました。<br>";
+			}
+			//現在の手番を表示
+			str = str + (BlackWhite ? "白" : "黒") + "の番です。";
+		}else{
+			str = "黒" + mBoard.getNumStones( 0 ) + "個、白"+mBoard.getNumStones( 1 )+"個で、"+(BlackWhite ? "白" : "黒") + "が勝ちました。";
+		}
+		mGameState.innerHTML = str;
 	}
 }
 
