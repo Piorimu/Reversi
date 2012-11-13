@@ -26,6 +26,8 @@ function Game( ctx ){
 	
 	var mBoard;
 	
+	var isPlayer = true;
+	
 	//初期化
 	this.Init = function(){
 		//画像ロード
@@ -50,6 +52,8 @@ function Game( ctx ){
 		mBoard.draw();
 	}
 }
+
+//グローバルなメソッドたち
 
 function GameLoop(){
 	gGame.update();
