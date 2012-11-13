@@ -23,9 +23,13 @@ var gMouse;
 function Game( ctx ){
 	var mCtx = ctx
 	
+	var mGameState = document.getElementById( "gameState" );
 	var mBoard;
 	
 	var BlackWhite = false;	//次打つ色。false黒true白
+	var isPrevNoPut = false;	//前の色で置く場所がなかったか
+	
+	var isEnd = false;	//試合が終わったか
 	
 	//初期化
 	this.Init = function(){
@@ -33,17 +37,75 @@ function Game( ctx ){
 		gIManager.LoadImage( "BoardCell.gif" );
 		gIManager.LoadImage( "Stones.gif" );
 		
+		this.Reset();
+	}
+	
+	//リセット
+	this.Reset = function(){
+		//先手は黒
+		BlackWhite = false;
+		//ボード初期化
 		mBoard = new Board( 8, 8 );
 		mBoard.Init();
+
+		if( !isEnd ){
+			mGameState.innerHTML = "";
+			//置けなくてパスした
+			if( isPrevNoPut ){
+				mGameState.innerHTML = "置く場所がないのでパスしました<br>";
+			}
+			//現在の手番を表示
+			mGameState.innerHTML += (BlackWhite ? "白" : "黒") + "の番です。";
+		}else{
+			mGameState.innerHTML = "黒" + mBoard.getNumStones( 0 ) + "個、白"+mBoard.getNumStones( 1 )+"個で、"+(BlackWhite ? "白" : "黒") + "が勝ちました。";
+		}		
+	}
+	
+	this.Pass = function(){
+		BlackWhite = !BlackWhite;
+		//置けましたか？
+		if( !mBoard.isCanPut(BlackWhite) ){
+			if( isPrevNoPut ){
+				//前の色でも置けなかったので勝敗チェック
+				this.Judgement();
+				
+				return;
+			}
+			//置けませんでした…
+			isPrevNoPut = true;
+			this.Pass();
+		}else{
+			isPrevNoPut = false;
+		}
 		
+		if( !isEnd ){
+			mGameState.innerHTML = "";
+			//置けなくてパスした
+			if( isPrevNoPut ){
+				mGameState.innerHTML = "置く場所がないのでパスしました<br>";
+			}
+			//現在の手番を表示
+			mGameState.innerHTML += (BlackWhite ? "白" : "黒") + "の番です。";
+		}else{
+			mGameState.innerHTML = "黒" + mBoard.getNumStones( 0 ) + "個、白"+mBoard.getNumStones( 1 )+"個で、"+(BlackWhite ? "白" : "黒") + "が勝ちました。";
+		}
+	}
+	
+	this.Judgement = function(){
+		BlackWhite = mBoard.getNumStones( 0 ) > mBoard.getNumStones( 1 );
+		isEnd = true;
 	}
 	
 	//更新
 	this.update = function(){
 		//ゲーム進行
-		if( gMouse.LClick ){
-			mBoard.PutStone( parseInt(gMouse.X / 50), parseInt(gMouse.Y / 50), BlackWhite ? 1 : 0 );
-			BlackWhite = !BlackWhite;
+		if( !isEnd ){
+			if( gMouse.LClick ){
+				var isPut = mBoard.PutStone( parseInt(gMouse.X / 50), parseInt(gMouse.Y / 50), BlackWhite ? 1 : 0 );
+				if( isPut == 0 ){	//置けた
+					this.Pass();
+				}
+			}
 		}
 		
 		//描画
@@ -97,4 +159,14 @@ window.onload = function() {
 		gameLoop = setInterval(GameLoop, 16);
 
 	}
+}
+
+//パスボタンを押した
+function Pass(){
+	gGame.Pass();
+}
+
+//リセットボタンを押した
+function Reset(){
+	gGame.Reset();
 }

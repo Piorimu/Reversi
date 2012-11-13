@@ -43,6 +43,64 @@ function Board( width, height ){
 		mBoard[ y * BOARD_WIDTH + x ] = board;
 	}
 	
+	//石が置けるか
+	//(x,y)にwobの石を置けるかチェックする
+	//-3:置いても裏返せれない -2:マスが空いてない -1:範囲外 0:置ける
+	this.PutCheck = function( putX, putY, wob ){
+		//範囲チェック
+		if( this.isOut( putX, putY ) ){
+			return -1;
+		}
+		
+		//空きマスか
+		if( mBoard[ putY * BOARD_WIDTH + putX ] != -1 ){
+			return -2;
+		}
+		
+		//裏返すべき石
+		var tstone = wob == 0 ? 1 : 0;
+		//各方向へ石があるか見ていく
+		for( cy = -1; cy <= 1; cy++ ){
+			for( cx = -1; cx <= 1; cx++ ){
+				//無意味
+				if( cx == 0 && cy == 0 ){
+					continue;
+				}
+				
+				var x = putX, y = putY;
+				//裏返せる石があったか
+				var isFindTS = false;
+				//ループ進めた数
+				var count = 0;
+				while(1){
+					x += cx; y += cy;
+					//範囲チェック
+					if( this.isOut( x, y ) ){
+						break;
+					}
+					
+					//裏返せる石を見つけた
+					if( mBoard[ y * BOARD_WIDTH + x ] == tstone ){
+						isFindTS = true;
+					}else{
+						//裏返せる石を見つけていた
+						if( isFindTS ){
+							//同じ色があった
+							if( mBoard[ y * BOARD_WIDTH + x ] == wob ){
+								//裏返せる！
+								return 0;
+							}
+						}
+						break;
+					}
+					
+					count++;
+				}
+			}			
+		}
+		return -3;
+	}
+	
 	//石を置く
 	//(x,y)にwobの石を置いて、裏返し処理を行う。
 	//返り値
@@ -108,8 +166,37 @@ function Board( width, height ){
 		}
 		
 		//最後に指定した場所に石を置く
-		if( isTurn ) mBoard[ putY * BOARD_WIDTH + putX ] = wob;
-		return 0;
+		if( isTurn ){
+			mBoard[ putY * BOARD_WIDTH + putX ] = wob;
+			return 0;
+		}
+		return -3;
+	}
+	
+	//colorで置ける場所があるか確かめる
+	this.isCanPut = function( color ){
+		for( y = 0;y < BOARD_HEIGHT; y++ ){
+			for( x = 0; x < BOARD_WIDTH; x++ ){
+				//置ける
+				if( this.PutCheck( x, y, color ) == 0 ){
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	//color色の石の数を数える
+	this.getNumStones = function( color ){
+		var num = 0;
+		for( y = 0;y < BOARD_HEIGHT; y++ ){
+			for( x = 0; x < BOARD_WIDTH; x++ ){
+				if( mBoard[ y * BOARD_WIDTH + x ] == color ){
+					num++;
+				}
+			}
+		}
+		return num;
 	}
 	
 	this.Init = function(){
