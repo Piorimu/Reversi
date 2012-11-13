@@ -9,76 +9,76 @@ var canvas; // Canvas element.
 var ctx; // Canvas context.
 var gameLoop; // Game loop time interval.
 
-  var gStage = new Stage( 10, 16 );
-  var gBall = new Ball( paddleX, paddleD - 10 );
-  var gIManager;
-  var gFManager = new FileManager();
-  var StageNum = 3;
-  
-  var isBallset = true;
-  
-  var Retry = 0;
+var gGame;
+var gBoard;
+var gIManager;
+var gFManager = new FileManager();
 
-  var leftKey = false;
-  var rightKey = false;
-  var spaceKey = false;
-  var spaceKeyToggle = false;
+var leftKey = false;
+var rightKey = false;
+var spaceKey = false;
+var spaceKeyToggle = false;
 // This function is called on page load.
 
-function drawGameCanvas() {
+window.onload = function() {
+	// Get the canvas element.
+	canvas = document.getElementById("gameBoard");
 
-// Get the canvas element.
-canvas = document.getElementById("gameBoard");
+	// Make sure you got it.
+	if (canvas.getContext) {
+		// Specify 2d canvas type.
+		ctx = canvas.getContext("2d");
+	  
+		gIManager = new ImageManager( ctx );
+		
+		//èâä˙âª
+		gBoard = new Board( 8, 8 );
 
-// Make sure you got it.
-if (canvas.getContext) {
-	// Specify 2d canvas type.
-	ctx = canvas.getContext("2d");
-  
-	gIManager = new ImageManager( ctx );
-	gIManager.LoadImage( "back.jpg" );
-	gIManager.LoadImage( "ball.gif" );
-	gIManager.LoadImage( "block.gif" );
-	gIManager.LoadImage( "paddle.gif" );
-  
-		//èâä˙âªèàóù
-		gStage.LoadStage( "./stage" + StageNum + ".txt" );
+		// Play the game until the ball stops.
+		gameLoop = setInterval(GameLoop, 16);
 
-	// Play the game until the ball stops.
-	gameLoop = setInterval(drawBall, 16);
+		// Add keyboard listener.
+		window.addEventListener('keydown', whatKeyDown, true);
 
-	// Add keyboard listener.
-	window.addEventListener('keydown', whatKeyDown, true);
+		// Add keyboard listener.
+		window.addEventListener('keyup', whatKeyUp, true);
 
-	// Add keyboard listener.
-	window.addEventListener('keyup', whatKeyUp, true);
-
-}
+	}
 }
 
+function Game(){
+	var mBoard;
+	
+	//èâä˙âª
+	this.Init(){
+		//âÊëúÉçÅ[Éh
+		gIManager.LoadImage( "BoardCell.jpg" );
+		gIManager.LoadImage( "Stones.gif" );
+	}
+}
 function drawBall() {
 
-// Clear the board.
-ctx.clearRect(0, 0, boardX, boardY);
+	// Clear the board.
+	ctx.clearRect(0, 0, boardX, boardY);
 
-// Fill the board.
-gIManager.DrawImage( "back.jpg", 0, 0 );
+	// Fill the board.
+	gIManager.DrawImage( "back.jpg", 0, 0 );
 
-gStage.drawBlocks( ctx );
+	gStage.drawBlocks( ctx );
 
-// Draw a ball.
-gBall.draw( ctx );
+	// Draw a ball.
+	gBall.draw( ctx );
 
-// Draw the paddle.
-gIManager.DrawImage( "paddle.gif", paddleX, paddleD );        
-	
+	// Draw the paddle.
+	gIManager.DrawImage( "paddle.gif", paddleX, paddleD );        
+
 	if( leftKey == true ){
-  paddleX = paddleX - 4;
-  if (paddleX < 0) paddleX = 0;
+		paddleX = paddleX - 4;
+		if (paddleX < 0) paddleX = 0;
 	}
 	if( rightKey == true ){
-  paddleX = paddleX + 4;
-  if (paddleX > boardX - paddleW) paddleX = boardX - paddleW;
+		paddleX = paddleX + 4;
+		if (paddleX > boardX - paddleW) paddleX = boardX - paddleW;
 	}
 	
 	if( gStage.isGameClear() == true ){
@@ -124,41 +124,40 @@ gIManager.DrawImage( "paddle.gif", paddleX, paddleD );
 
 
 function whatKeyDown(evt) {
-
-switch (evt.keyCode) {
-  // Left arrow.
-case 37:
+	switch (evt.keyCode) {
+	// Left arrow.
+	case 37:
 		leftKey = true;
-  break;
+	break;
 
-  // Right arrow.
-case 39:
+	// Right arrow.
+	case 39:
 		rightKey = true;
-  break;
-  
-  //Space Key
-  case 32:
+	break;
+
+	//Space Key
+	case 32:
 	spaceKey = true;
 	break;          
-}
+	}
 }
 
 function whatKeyUp(evt) {
 
-switch (evt.keyCode) {
-  // Left arrow.
-case 37:
+	switch (evt.keyCode) {
+	// Left arrow.
+	case 37:
 		leftKey = false;
-  break;
+	break;
 
-  // Right arrow.
-case 39:
+	// Right arrow.
+	case 39:
 		rightKey = false;
-  break;
-  
-  //Space Key
-  case 32:
+	break;
+
+	//Space Key
+	case 32:
 	spaceKey = false;
 	break;
-}
+	}
 }
