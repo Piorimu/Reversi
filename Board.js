@@ -23,12 +23,20 @@ function Board( width, height ){
 			mBoard[ y * BOARD_WIDTH + x ] = -1;
 		}
 	}
-
+	
+	//範囲チェック
+	this.isOut = function( x, y ){
+		//範囲チェック
+		if( x < 0 || x >= BOARD_WIDTH || y < 0 || y >= BOARD_HEIGHT ){
+			return true;
+		}
+		return false;
+	}
 	//ボード操作
 	//(x,y)をboardにする。石の裏返し等は行わない。
 	this.setBoard = function( x, y, board ){
 		//範囲チェック
-		if( x < 0 || x > BOARD_WIDTH || y < 0 || y > BOARD_HEIGHT ){
+		if( this.isOut( x, y ) ){
 			return null;
 		}
 		
@@ -37,20 +45,71 @@ function Board( width, height ){
 	
 	//石を置く
 	//(x,y)にwobの石を置いて、裏返し処理を行う。
-	this.PutStone = function( x, y, wob ){
+	//返り値
+	//-3:置いても裏返せれない -2:マスが空いてない -1:範囲外 0:成功
+	this.PutStone = function( putX, putY, wob ){
 		//範囲チェック
-		if( x < 0 || x > BOARD_WIDTH || y < 0 || y > BOARD_HEIGHT ){
-			return null;
+		if( this.isOut( putX, putY ) ){
+			return -1;
 		}
 		
 		//空きマスか
-		if( mBoard[ y * BOARD_WIDTH + x ] != -1 ){
-			return null;
+		if( mBoard[ putY * BOARD_WIDTH + putX ] != -1 ){
+			return -2;
 		}
 		
-		mBoard[ y * BOARD_WIDTH + x ] = wob;
+		//裏返せたか
+		var isTurn = false;
+		//裏返すべき石
+		var tstone = wob == 0 ? 1 : 0;
+		//各方向へ石があるか見ていく
+		for( cy = -1; cy <= 1; cy++ ){
+			for( cx = -1; cx <= 1; cx++ ){
+				//無意味
+				if( cx == 0 && cy == 0 ){
+					continue;
+				}
+				
+				var x = putX, y = putY;
+				//裏返せる石があったか
+				var isFindTS = false;
+				//ループ進めた数
+				var count = 0;
+				while(1){
+					x += cx; y += cy;
+					//範囲チェック
+					if( this.isOut( x, y ) ){
+						break;
+					}
+					
+					//裏返せる石を見つけた
+					if( mBoard[ y * BOARD_WIDTH + x ] == tstone ){
+						isFindTS = true;
+					}else{
+						//裏返せる石を見つけていた
+						if( isFindTS ){
+							//同じ色があった
+							if( mBoard[ y * BOARD_WIDTH + x ] == wob ){
+								//裏返せる！
+								isTurn = true;
+								//元の場所から戻りながら裏返していく
+								for( i = 0; i < count; i++ ){
+									x -= cx; y -= cy;
+									mBoard[ y * BOARD_WIDTH + x ] = wob;
+								}
+							}
+						}
+						break;
+					}
+					
+					count++;
+				}
+			}			
+		}
 		
-		//:TODO 石の裏返し
+		//最後に指定した場所に石を置く
+		if( isTurn ) mBoard[ putY * BOARD_WIDTH + putX ] = wob;
+		return 0;
 	}
 	
 	this.Init = function(){
