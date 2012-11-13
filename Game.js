@@ -9,10 +9,13 @@ var canvas; // Canvas element.
 var ctx; // Canvas context.
 var gameLoop; // Game loop time interval.
 
+var gLog;
+
 var gGame;
 var gBoard;
 var gIManager;
 var gFManager = new FileManager();
+var gMouse;
 
 var leftKey = false;
 var rightKey = false;
@@ -41,8 +44,8 @@ function Game( ctx ){
 	
 	//更新
 	this.update = function(){
-		
 		this.draw();
+		gMouse.update();
 	}
 	
 	//画面描画
@@ -50,6 +53,12 @@ function Game( ctx ){
 		mCtx.clearRect( 0, 0, boardX, boardY );
 		
 		mBoard.draw();
+		
+		//マウス座標表示
+		gLog.value = "MouseX:"+gMouse.X+" MouseY:"+gMouse.Y+"\n";
+		if( gMouse.LClick ){
+			gLog.value += "Click!";
+		}
 	}
 }
 
@@ -62,9 +71,14 @@ function GameLoop(){
 window.onload = function() {
 	// Get the canvas element.
 	canvas = document.getElementById("gameBoard");
+	
+	gLog = document.getElementById( "Log" );
 
 	// Make sure you got it.
 	if (canvas.getContext) {
+		//マウスクラス作成
+		gMouse = new Mouse( canvas );
+		
 		// Specify 2d canvas type.
 		ctx = canvas.getContext("2d");
 	  
@@ -78,10 +92,10 @@ window.onload = function() {
 		gameLoop = setInterval(GameLoop, 16);
 
 		// Add keyboard listener.
-		window.addEventListener('keydown', whatKeyDown, true);
+		window.addEventListener('keydown', whatKeyDown, false);
 
 		// Add keyboard listener.
-		window.addEventListener('keyup', whatKeyUp, true);
+		window.addEventListener('keyup', whatKeyUp, false);
 
 	}
 }
