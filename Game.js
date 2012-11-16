@@ -1,13 +1,6 @@
-// Global variables.
+ï»¿// Global variables.
 var boardX = 400; // Board width.
 var boardY = 400; // Board height.
-var paddleX = 150; // Initial paddle location.
-var paddleH = 20; // Paddle height.
-var paddleD = boardY - paddleH - 10; // Paddle depth.
-var paddleW = 80; // Paddle width.
-var canvas; // Canvas element.
-var ctx; // Canvas context.
-var gameLoop; // Game loop time interval.
 
 var gLog;
 
@@ -26,30 +19,36 @@ function Game( ctx ){
 	var mGameState = document.getElementById( "gameState" );
 	var mBoard;
 	
-	var BlackWhite = false;	//Ÿ‘Å‚ÂFBfalse•true”’
-	var isPrevNoPut = false;	//‘O‚ÌF‚Å’u‚­êŠ‚ª‚È‚©‚Á‚½‚©
+	var BlackWhite = false;	//æ¬¡æ‰“ã¤è‰²ã€‚falseé»’trueç™½
+	var isPrevNoPut = false;	//å‰ã®è‰²ã§ç½®ãå ´æ‰€ãŒãªã‹ã£ãŸã‹
 	var isPass = false;
 	
-	var isEnd = false;	//‡‚ªI‚í‚Á‚½‚©
+	var isBCom = false;	//é»’ãŒã‚³ãƒ³ãƒ”ãƒ¥ãƒ¼ã‚¿ã‹
+	var isWCom = false;	//ç™½ãŒã‚³ãƒ³ãƒ”ãƒ¥ãƒ¼ã‚¿ã‹
 	
-	//‰Šú‰»
+	var isEnd = false;	//è©¦åˆãŒçµ‚ã‚ã£ãŸã‹
+	
+	//åˆæœŸåŒ–
 	this.Init = function(){
-		//‰æ‘œƒ[ƒh
+		//ç”»åƒãƒ­ãƒ¼ãƒ‰
 		gIManager.LoadImage( "BoardCell.gif" );
 		gIManager.LoadImage( "Stones.gif" );
 		
 		this.Reset();
 	}
 	
-	//ƒŠƒZƒbƒg
+	//ãƒªã‚»ãƒƒãƒˆ
 	this.Reset = function(){
 		isEnd = false;
 		isPrevNoPut = false;
 		isPass = false;
 		
-		//æè‚Í•
+		isBCom = document.getElementById("bcom").checked;
+		isWCom = document.getElementById("wcom").checked;
+		
+		//å…ˆæ‰‹ã¯é»’
 		BlackWhite = false;
-		//ƒ{[ƒh‰Šú‰»
+		//ãƒœãƒ¼ãƒ‰åˆæœŸåŒ–
 		mBoard = new Board( 8, 8 );
 		mBoard.Init();
 	}
@@ -61,15 +60,15 @@ function Game( ctx ){
 	
 	this.NextTurn = function(){
 		BlackWhite = !BlackWhite;
-		//’u‚¯‚Ü‚µ‚½‚©H
+		//ç½®ã‘ã¾ã—ãŸã‹ï¼Ÿ
 		if( !mBoard.isCanPut(BlackWhite) ){
 			if( isPrevNoPut ){
-				//‘O‚ÌF‚Å‚à’u‚¯‚È‚©‚Á‚½‚Ì‚ÅŸ”sƒ`ƒFƒbƒN
+				//å‰ã®è‰²ã§ã‚‚ç½®ã‘ãªã‹ã£ãŸã®ã§å‹æ•—ãƒã‚§ãƒƒã‚¯
 				this.Judgement();
 				
 				return;
 			}
-			//’u‚¯‚Ü‚¹‚ñ‚Å‚µ‚½c
+			//ç½®ã‘ã¾ã›ã‚“ã§ã—ãŸâ€¦
 			isPrevNoPut = true;
 			this.Pass();
 		}else{
@@ -83,33 +82,63 @@ function Game( ctx ){
 		isEnd = true;
 	}
 	
-	//XV
+	this.Player = function(){
+		if( gMouse.LClick ){
+			var isPut = mBoard.PutStone( parseInt(gMouse.X / 50), parseInt(gMouse.Y / 50), BlackWhite ? 1 : 0, true );
+			if( isPut == 0 ){	//ç½®ã‘ãŸ
+				isPass = false;
+				this.NextTurn();
+			}
+		}
+	}
+	
+	this.Computer = function(){
+		var Pos = mBoard.getCanPutPos( BlackWhite );
+		var Key = Math.floor( Math.random() * Pos.length );
+		
+		var isPut = mBoard.PutStone( Pos[Key].X, Pos[Key].Y, BlackWhite ? 1 : 0, true );
+		if( isPut == 0 ){	//ç½®ã‘ãŸ
+			isPass = false;
+			this.NextTurn();
+		}else{
+		}
+	}
+	
+	//æ›´æ–°
 	this.update = function(){
-		//ƒQ[ƒ€is
+		//ã‚²ãƒ¼ãƒ é€²è¡Œ
 		if( !isEnd ){
-			if( gMouse.LClick ){
-				var isPut = mBoard.PutStone( parseInt(gMouse.X / 50), parseInt(gMouse.Y / 50), BlackWhite ? 1 : 0 );
-				if( isPut == 0 ){	//’u‚¯‚½
-					isPass = false;
-					this.NextTurn();
+			if( BlackWhite ){
+				//ç™½
+				if( isWCom ){
+					this.Computer();
+				}else{
+					this.Player();
+				}
+			}else{
+				//é»’
+				if( isBCom ){
+					this.Computer();
+				}else{
+					this.Player();
 				}
 			}
 		}
 		
-		//•`‰æ
+		//æç”»
 		this.draw();
 		
-		//ƒ}ƒEƒXó‘ÔXV
+		//ãƒã‚¦ã‚¹çŠ¶æ…‹æ›´æ–°
 		gMouse.update();
 	}
 	
-	//‰æ–Ê•`‰æ
+	//ç”»é¢æç”»
 	this.draw = function(){
 		mCtx.clearRect( 0, 0, boardX, boardY );
 		
 		mBoard.draw();
 		
-		//ƒ}ƒEƒXÀ•W•\¦
+		//ãƒã‚¦ã‚¹åº§æ¨™è¡¨ç¤º
 		gLog.value = "MouseX:"+gMouse.X+" MouseY:"+gMouse.Y+"\n";
 		if( gMouse.LClick ){
 			gLog.value += "Click!";
@@ -117,20 +146,20 @@ function Game( ctx ){
 		
 		var str = "";
 		if( !isEnd ){
-			//’u‚¯‚È‚­‚ÄƒpƒX‚µ‚½
+			//ç½®ã‘ãªãã¦ãƒ‘ã‚¹ã—ãŸ
 			if( isPass ){
-				str = "ƒpƒX‚µ‚Ü‚µ‚½B<br>";
+				str = "ãƒ‘ã‚¹ã—ã¾ã—ãŸã€‚<br>";
 			}
-			//Œ»İ‚Ìè”Ô‚ğ•\¦
-			str = str + (BlackWhite ? "”’" : "•") + "‚Ì”Ô‚Å‚·B";
+			//ç¾åœ¨ã®æ‰‹ç•ªã‚’è¡¨ç¤º
+			str = str + (BlackWhite ? "ç™½" : "é»’") + "ã®ç•ªã§ã™ã€‚";
 		}else{
-			str = "•" + mBoard.getNumStones( 0 ) + "ŒÂA”’"+mBoard.getNumStones( 1 )+"ŒÂ‚ÅA"+(BlackWhite ? "”’" : "•") + "‚ªŸ‚¿‚Ü‚µ‚½B";
+			str = "é»’" + mBoard.getNumStones( 0 ) + "å€‹ã€ç™½"+mBoard.getNumStones( 1 )+"å€‹ã§ã€"+(BlackWhite ? "ç™½" : "é»’") + "ãŒå‹ã¡ã¾ã—ãŸã€‚";
 		}
 		mGameState.innerHTML = str;
 	}
 }
 
-//ƒOƒ[ƒoƒ‹‚Èƒƒ\ƒbƒh‚½‚¿
+//ã‚°ãƒ­ãƒ¼ãƒãƒ«ãªãƒ¡ã‚½ãƒƒãƒ‰ãŸã¡
 
 function GameLoop(){
 	gGame.update();
@@ -144,7 +173,7 @@ window.onload = function() {
 
 	// Make sure you got it.
 	if (canvas.getContext) {
-		//ƒ}ƒEƒXƒNƒ‰ƒXì¬
+		//ãƒã‚¦ã‚¹ã‚¯ãƒ©ã‚¹ä½œæˆ
 		gMouse = new Mouse( canvas );
 		
 		// Specify 2d canvas type.
@@ -152,7 +181,7 @@ window.onload = function() {
 	  
 		gIManager = new ImageManager( ctx );
 		
-		//ƒQ[ƒ€ƒNƒ‰ƒXì¬
+		//ã‚²ãƒ¼ãƒ ã‚¯ãƒ©ã‚¹ä½œæˆ
 		gGame = new Game( ctx );
 		gGame.Init();
 
@@ -162,12 +191,7 @@ window.onload = function() {
 	}
 }
 
-//ƒpƒXƒ{ƒ^ƒ“‚ğ‰Ÿ‚µ‚½
-function Pass(){
-	gGame.Pass();
-}
-
-//ƒŠƒZƒbƒgƒ{ƒ^ƒ“‚ğ‰Ÿ‚µ‚½
+//ãƒªã‚»ãƒƒãƒˆãƒœã‚¿ãƒ³ã‚’æŠ¼ã—ãŸ
 function Reset(){
 	gGame.Reset();
 }

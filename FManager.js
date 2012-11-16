@@ -1,5 +1,5 @@
-//FileManager
-//ƒeƒLƒXƒgƒtƒ@ƒCƒ‹‚Æ‚©‚Ğ‚ç‚¢‚Ä•¶š—ñ‚É‚µ‚¿‚á‚¤‚æ‚¤
+ï»¿//FileManager
+//ãƒ†ã‚­ã‚¹ãƒˆãƒ•ã‚¡ã‚¤ãƒ«ã¨ã‹ã²ã‚‰ã„ã¦æ–‡å­—åˆ—ã«ã—ã¡ã‚ƒã†ã‚ˆã†
 function FileManager(){
 	var xmlHttp;
 	var Datas;

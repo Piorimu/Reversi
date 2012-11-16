@@ -1,11 +1,11 @@
-//Board
-//ƒ{[ƒhƒNƒ‰ƒX
+ï»¿//Board
+//ãƒœãƒ¼ãƒ‰ã‚¯ãƒ©ã‚¹
 
-//-1:–¢”z’u
-//0:•
-//1:”’
+//-1:æœªé…ç½®
+//0:é»’
+//1:ç™½
 function Board( width, height ){
-	//ƒ{[ƒh‚Ìc‰¡‚ÌƒTƒCƒY‚ª—¼•û6~100ƒ}ƒX‚Åû‚Ü‚Á‚Ä‚¢‚é‚©
+	//ãƒœãƒ¼ãƒ‰ã®ç¸¦æ¨ªã®ã‚µã‚¤ã‚ºãŒä¸¡æ–¹6~100ãƒã‚¹ã§åã¾ã£ã¦ã„ã‚‹ã‹
 	if( width < 6 || width > 100 || height < 6 || height > 100 ){
 		return null;
 	}
@@ -17,25 +17,18 @@ function Board( width, height ){
 	
 	mBoard = new Array( width * height );
 	
-	//‰Šú‰»
-	for( y = 0; y < BOARD_HEIGHT; y++ ){
-		for( x = 0; x < BOARD_WIDTH; x++ ){
-			mBoard[ y * BOARD_WIDTH + x ] = -1;
-		}
-	}
-	
-	//”ÍˆÍƒ`ƒFƒbƒN
+	//ç¯„å›²ãƒã‚§ãƒƒã‚¯
 	this.isOut = function( x, y ){
-		//”ÍˆÍƒ`ƒFƒbƒN
+		//ç¯„å›²ãƒã‚§ãƒƒã‚¯
 		if( x < 0 || x >= BOARD_WIDTH || y < 0 || y >= BOARD_HEIGHT ){
 			return true;
 		}
 		return false;
 	}
-	//ƒ{[ƒh‘€ì
-	//(x,y)‚ğboard‚É‚·‚éBÎ‚Ì— •Ô‚µ“™‚Ís‚í‚È‚¢B
+	//ãƒœãƒ¼ãƒ‰æ“ä½œ
+	//(x,y)ã‚’boardã«ã™ã‚‹ã€‚çŸ³ã®è£è¿”ã—ç­‰ã¯è¡Œã‚ãªã„ã€‚
 	this.setBoard = function( x, y, board ){
-		//”ÍˆÍƒ`ƒFƒbƒN
+		//ç¯„å›²ãƒã‚§ãƒƒã‚¯
 		if( this.isOut( x, y ) ){
 			return null;
 		}
@@ -43,118 +36,61 @@ function Board( width, height ){
 		mBoard[ y * BOARD_WIDTH + x ] = board;
 	}
 	
-	//Î‚ª’u‚¯‚é‚©
-	//(x,y)‚Éwob‚ÌÎ‚ğ’u‚¯‚é‚©ƒ`ƒFƒbƒN‚·‚é
-	//-3:’u‚¢‚Ä‚à— •Ô‚¹‚ê‚È‚¢ -2:ƒ}ƒX‚ª‹ó‚¢‚Ä‚È‚¢ -1:”ÍˆÍŠO 0:’u‚¯‚é
-	this.PutCheck = function( putX, putY, wob ){
-		//”ÍˆÍƒ`ƒFƒbƒN
+	//çŸ³ã‚’ç½®ã
+	//(x,y)ã«wobã®çŸ³ã‚’ç½®ã„ã¦ã€ifFlipãŒtrueãªã‚‰è£è¿”ã—å‡¦ç†ã‚’è¡Œã†ã€‚
+	//è¿”ã‚Šå€¤
+	//-3:ç½®ã„ã¦ã‚‚è£è¿”ã›ã‚Œãªã„ -2:ãƒã‚¹ãŒç©ºã„ã¦ãªã„ -1:ç¯„å›²å¤– 0:æˆåŠŸ
+	this.PutStone = function( putX, putY, wob, isFlip ){
+		//ç¯„å›²ãƒã‚§ãƒƒã‚¯
 		if( this.isOut( putX, putY ) ){
 			return -1;
 		}
 		
-		//‹ó‚«ƒ}ƒX‚©
+		//ç©ºããƒã‚¹ã‹
 		if( mBoard[ putY * BOARD_WIDTH + putX ] != -1 ){
 			return -2;
 		}
 		
-		//— •Ô‚·‚×‚«Î
+		//è£è¿”ã™ã¹ãçŸ³
 		var tstone = wob == 0 ? 1 : 0;
-		//Še•ûŒü‚ÖÎ‚ª‚ ‚é‚©Œ©‚Ä‚¢‚­
+		//å„æ–¹å‘ã¸çŸ³ãŒã‚ã‚‹ã‹è¦‹ã¦ã„ã
 		for( cy = -1; cy <= 1; cy++ ){
 			for( cx = -1; cx <= 1; cx++ ){
-				//–³ˆÓ–¡
+				//ç„¡æ„å‘³
 				if( cx == 0 && cy == 0 ){
 					continue;
 				}
 				
 				var x = putX, y = putY;
-				//— •Ô‚¹‚éÎ‚ª‚ ‚Á‚½‚©
+				//è£è¿”ã›ã‚‹çŸ³ãŒã‚ã£ãŸã‹
 				var isFindTS = false;
-				//ƒ‹[ƒvi‚ß‚½”
+				//ãƒ«ãƒ¼ãƒ—é€²ã‚ãŸæ•°
 				var count = 0;
 				while(1){
 					x += cx; y += cy;
-					//”ÍˆÍƒ`ƒFƒbƒN
+					//ç¯„å›²ãƒã‚§ãƒƒã‚¯
 					if( this.isOut( x, y ) ){
 						break;
 					}
 					
-					//— •Ô‚¹‚éÎ‚ğŒ©‚Â‚¯‚½
+					//è£è¿”ã›ã‚‹çŸ³ã‚’è¦‹ã¤ã‘ãŸ
 					if( mBoard[ y * BOARD_WIDTH + x ] == tstone ){
 						isFindTS = true;
 					}else{
-						//— •Ô‚¹‚éÎ‚ğŒ©‚Â‚¯‚Ä‚¢‚½
+						//è£è¿”ã›ã‚‹çŸ³ã‚’è¦‹ã¤ã‘ã¦ã„ãŸ
 						if( isFindTS ){
-							//“¯‚¶F‚ª‚ ‚Á‚½
+							//åŒã˜è‰²ãŒã‚ã£ãŸ
 							if( mBoard[ y * BOARD_WIDTH + x ] == wob ){
-								//— •Ô‚¹‚éI
-								return 0;
-							}
-						}
-						break;
-					}
-					
-					count++;
-				}
-			}			
-		}
-		return -3;
-	}
-	
-	//Î‚ğ’u‚­
-	//(x,y)‚Éwob‚ÌÎ‚ğ’u‚¢‚ÄA— •Ô‚µˆ—‚ğs‚¤B
-	//•Ô‚è’l
-	//-3:’u‚¢‚Ä‚à— •Ô‚¹‚ê‚È‚¢ -2:ƒ}ƒX‚ª‹ó‚¢‚Ä‚È‚¢ -1:”ÍˆÍŠO 0:¬Œ÷
-	this.PutStone = function( putX, putY, wob ){
-		//”ÍˆÍƒ`ƒFƒbƒN
-		if( this.isOut( putX, putY ) ){
-			return -1;
-		}
-		
-		//‹ó‚«ƒ}ƒX‚©
-		if( mBoard[ putY * BOARD_WIDTH + putX ] != -1 ){
-			return -2;
-		}
-		
-		//— •Ô‚¹‚½‚©
-		var isTurn = false;
-		//— •Ô‚·‚×‚«Î
-		var tstone = wob == 0 ? 1 : 0;
-		//Še•ûŒü‚ÖÎ‚ª‚ ‚é‚©Œ©‚Ä‚¢‚­
-		for( cy = -1; cy <= 1; cy++ ){
-			for( cx = -1; cx <= 1; cx++ ){
-				//–³ˆÓ–¡
-				if( cx == 0 && cy == 0 ){
-					continue;
-				}
-				
-				var x = putX, y = putY;
-				//— •Ô‚¹‚éÎ‚ª‚ ‚Á‚½‚©
-				var isFindTS = false;
-				//ƒ‹[ƒvi‚ß‚½”
-				var count = 0;
-				while(1){
-					x += cx; y += cy;
-					//”ÍˆÍƒ`ƒFƒbƒN
-					if( this.isOut( x, y ) ){
-						break;
-					}
-					
-					//— •Ô‚¹‚éÎ‚ğŒ©‚Â‚¯‚½
-					if( mBoard[ y * BOARD_WIDTH + x ] == tstone ){
-						isFindTS = true;
-					}else{
-						//— •Ô‚¹‚éÎ‚ğŒ©‚Â‚¯‚Ä‚¢‚½
-						if( isFindTS ){
-							//“¯‚¶F‚ª‚ ‚Á‚½
-							if( mBoard[ y * BOARD_WIDTH + x ] == wob ){
-								//— •Ô‚¹‚éI
-								isTurn = true;
-								//Œ³‚ÌêŠ‚©‚ç–ß‚è‚È‚ª‚ç— •Ô‚µ‚Ä‚¢‚­
+								//è£è¿”ã›ã‚‹ï¼
+								if( !isFlip ) return 0;
+								//å…ƒã®å ´æ‰€ã‹ã‚‰æˆ»ã‚ŠãªãŒã‚‰è£è¿”ã—ã¦ã„ã
 								for( i = 0; i < count; i++ ){
 									x -= cx; y -= cy;
 									mBoard[ y * BOARD_WIDTH + x ] = wob;
 								}
+								
+								//æœ€å¾Œã«æŒ‡å®šã—ãŸå ´æ‰€ã«çŸ³ã‚’ç½®ã
+								mBoard[ putY * BOARD_WIDTH + putX ] = wob;
 							}
 						}
 						break;
@@ -164,21 +100,17 @@ function Board( width, height ){
 				}
 			}			
 		}
-		
-		//ÅŒã‚Éw’è‚µ‚½êŠ‚ÉÎ‚ğ’u‚­
-		if( isTurn ){
-			mBoard[ putY * BOARD_WIDTH + putX ] = wob;
-			return 0;
-		}
-		return -3;
+		if( !isFlip ) return -3;
+		//æŒ‡å®šã—ãŸå ´æ‰€ã«çŸ³ãŒç½®ã‘ã¦ãŸã‚‰0,ç½®ã‘ã¦ãªã„ãªã‚‰-3ã‚’è¿”ã™
+		return (mBoard[ putY * BOARD_WIDTH + putX ] == -1) ? -3 : 0;
 	}
 	
-	//color‚Å’u‚¯‚éêŠ‚ª‚ ‚é‚©Šm‚©‚ß‚é
+	//colorã§ç½®ã‘ã‚‹å ´æ‰€ãŒã‚ã‚‹ã‹ç¢ºã‹ã‚ã‚‹
 	this.isCanPut = function( color ){
 		for( y = 0;y < BOARD_HEIGHT; y++ ){
 			for( x = 0; x < BOARD_WIDTH; x++ ){
-				//’u‚¯‚é
-				if( this.PutCheck( x, y, color ) == 0 ){
+				//ç½®ã‘ã‚‹
+				if( this.PutStone( x, y, color, false ) == 0 ){
 					return true;
 				}
 			}
@@ -186,7 +118,26 @@ function Board( width, height ){
 		return false;
 	}
 	
-	//colorF‚ÌÎ‚Ì”‚ğ”‚¦‚é
+	//colorã§ç½®ã‘ã‚‹å ´æ‰€ã‚’è¿”ã™
+	this.getCanPutPos = function( color ){
+		var pos = [];
+		var count = 0;
+		for( y = 0;y < BOARD_HEIGHT; y++ ){
+			for( x = 0; x < BOARD_WIDTH; x++ ){
+				//ç½®ã‘ã‚‹
+				if( this.PutStone( x, y, color, false ) == 0 ){
+					pos[count] = { X: x, Y: y };
+					count++;
+				}
+			}
+		}
+		if( count == 0 ){
+			pos = null;
+		}
+		return pos;		
+	}
+	
+	//colorè‰²ã®çŸ³ã®æ•°ã‚’æ•°ãˆã‚‹
 	this.getNumStones = function( color ){
 		var num = 0;
 		for( y = 0;y < BOARD_HEIGHT; y++ ){
@@ -200,16 +151,22 @@ function Board( width, height ){
 	}
 	
 	this.Init = function(){
-		//‰Šú”z’u
-		//›œ
-		//œ›
+		//åˆæœŸåŒ–
+		for( y = 0; y < BOARD_HEIGHT; y++ ){
+			for( x = 0; x < BOARD_WIDTH; x++ ){
+				mBoard[ y * BOARD_WIDTH + x ] = -1;
+			}
+		}
+		//åˆæœŸé…ç½®
+		//â—‹â—
+		//â—â—‹
 		this.setBoard( BOARD_WIDTH / 2 - 1, BOARD_HEIGHT / 2 - 1, 1 );
 		this.setBoard( BOARD_WIDTH / 2, BOARD_HEIGHT / 2 - 1, 0 );
 		this.setBoard( BOARD_WIDTH / 2 - 1, BOARD_HEIGHT / 2, 0 );
 		this.setBoard( BOARD_WIDTH / 2, BOARD_HEIGHT / 2, 1 );
 	}
 	
-	//ƒ{[ƒh•`‰æ
+	//ãƒœãƒ¼ãƒ‰æç”»
 	this.draw = function(){
 		for( y = 0; y < BOARD_HEIGHT; y++ ){
 			for( x = 0; x < BOARD_WIDTH; x++ ){
@@ -219,10 +176,10 @@ function Board( width, height ){
 				gIManager.DrawImage( "BoardCell.gif", tx, ty );
 				
 				switch( mBoard[ y * BOARD_WIDTH + x ] ){
-					case 0:	//•
+					case 0:	//é»’
 						gIManager.DrawImage( "Stones.gif", 0, 0, 48, 48, tx + 1, ty + 1);
 						break;
-					case 1: 	//”’
+					case 1: 	//ç™½
 						gIManager.DrawImage( "Stones.gif", 48, 0, 48, 48, tx + 1, ty + 1);					
 						break;
 				}

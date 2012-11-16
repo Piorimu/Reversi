@@ -1,5 +1,5 @@
-//ImageManagerƒNƒ‰ƒX
-//‰æ‘œ‚Ì“Ç‚İ‚İA•`‰æ
+ï»¿//ImageManagerã‚¯ãƒ©ã‚¹
+//ç”»åƒã®èª­ã¿è¾¼ã¿ã€æç”»
 function ImageManager( g ){
 	var Graphic = g;
 	var myImages = [];
@@ -29,12 +29,12 @@ function ImageManager( g ){
 	}
 	
 	//DrawImage
-	//‰æ‘œ‚ğ•`‰æ‚·‚éB
-	//‹[—“I‚ÉƒI[ƒo[ƒ[ƒh‚ğÀ‘•‚·‚é‚½‚ß‚ÉA
-	//ˆø”‚Ì”‚ğŒ©‚ÄAÀÛ‚É•`‰æ‚·‚éŠedrawŠÖ”‚Ö”ò‚Î‚·B
+	//ç”»åƒã‚’æç”»ã™ã‚‹ã€‚
+	//æ“¬ä¼¼çš„ã«ã‚ªãƒ¼ãƒãƒ¼ãƒ­ãƒ¼ãƒ‰ã‚’å®Ÿè£…ã™ã‚‹ãŸã‚ã«ã€
+	//å¼•æ•°ã®æ•°ã‚’è¦‹ã¦ã€å®Ÿéš›ã«æç”»ã™ã‚‹å„drawé–¢æ•°ã¸é£›ã°ã™ã€‚
 	this.DrawImage = function( key, dsx, dsy, dsw, dsh, dx, dy, dw, dh ){
 		if( myImages[key] != null ){
-			//ƒ[ƒfƒBƒ“ƒOI—¹‘O‚É•`‰æƒƒ\ƒbƒh‚ªŒÄ‚Î‚ê‚½‚ç‰½‚à‚µ‚È‚¢ˆÀ’èB
+			//ãƒ­ãƒ¼ãƒ‡ã‚£ãƒ³ã‚°çµ‚äº†å‰ã«æç”»ãƒ¡ã‚½ãƒƒãƒ‰ãŒå‘¼ã°ã‚ŒãŸã‚‰ä½•ã‚‚ã—ãªã„å®‰å®šã€‚
 			if( myImages[key].complete == false ){
 				return false;
 			}
@@ -43,19 +43,19 @@ function ImageManager( g ){
 		}			
 		switch (arguments.length) {
 			case 3:
-				//dsx,dsy‚É‰æ‘œ‚ğŒ´¡‚Å•`‰æ
+				//dsx,dsyã«ç”»åƒã‚’åŸå¯¸ã§æç”»
 				this.draw3( key, dsx, dsy );
 				break;
 			case 5:
-				//dsx,dsy‚É‰æ‘œ‚ğƒTƒCƒYdsw‚˜dsh‚Å•`‰æ
+				//dsx,dsyã«ç”»åƒã‚’ã‚µã‚¤ã‚ºdswï½˜dshã§æç”»
 				this.draw5( key, dsx, dsy, dsw, dsh );
 				break;
 			case 7:
-				//dx,dy‚É‰æ‘œ‚Ìdsx,dsy‚ğ‹N“_‚Æ‚µ‚Ädsw,dsh‚Ì‘å‚«‚³‚Ì•”•ª‚ğ•`‰æ
+				//dx,dyã«ç”»åƒã®dsx,dsyã‚’èµ·ç‚¹ã¨ã—ã¦dsw,dshã®å¤§ãã•ã®éƒ¨åˆ†ã‚’æç”»
 				this.draw7( key, dsx, dsy, dsw, dsh, dx, dy );
 				break;
 			case 9:
-				//dx,dy‚É‰æ‘œ‚Ìdsx,dsy‚ğ‹N“_‚Æ‚µ‚Ädsw,dsh‚Ì‘å‚«‚³‚Ì•”•ª‚ğdw,dh‚ÌƒTƒCƒY‚ÉŠg‘åk¬‚µ‚Ä•`‰æ
+				//dx,dyã«ç”»åƒã®dsx,dsyã‚’èµ·ç‚¹ã¨ã—ã¦dsw,dshã®å¤§ãã•ã®éƒ¨åˆ†ã‚’dw,dhã®ã‚µã‚¤ã‚ºã«æ‹¡å¤§ç¸®å°ã—ã¦æç”»
 				this.draw9( key, dsx, dsy, dsw, dsh, dx, dy, dw, dh );
 				break;
 			default:
@@ -80,7 +80,7 @@ function ImageManager( g ){
 		Graphic.drawImage( myImages[key], sx, sy, sw, sh, dx, dy, dw, dh );
 	}
 	
-	//ƒ[ƒfƒBƒ“ƒO’†‚©‚ğ•Ô‚·
+	//ãƒ­ãƒ¼ãƒ‡ã‚£ãƒ³ã‚°ä¸­ã‹ã‚’è¿”ã™
 	this.isLoadComplete = function(){
 		for( var key in myImages ){
 			if( myImages[key].complete == false ){
@@ -90,6 +90,6 @@ function ImageManager( g ){
 		return true;
 	}
 	
-	//ƒ[ƒfƒBƒ“ƒO‘Ò‚¿‚Ì‰æ‘œ‚Ì”‚©ƒŠƒXƒg‚ğ•Ô‚·
+	//ãƒ­ãƒ¼ãƒ‡ã‚£ãƒ³ã‚°å¾…ã¡ã®ç”»åƒã®æ•°ã‹ãƒªã‚¹ãƒˆã‚’è¿”ã™
 	
 }

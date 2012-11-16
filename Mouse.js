@@ -1,7 +1,7 @@
-//MouseƒNƒ‰ƒX
-//ƒ}ƒEƒXŠÖŒW‚Ìˆ—‚ğ’S‚¤
+ï»¿//Mouseã‚¯ãƒ©ã‚¹
+//ãƒã‚¦ã‚¹é–¢ä¿‚ã®å‡¦ç†ã‚’æ‹…ã†
 
-//ƒCƒxƒ“ƒg“o˜^ƒƒ\ƒbƒh
+//ã‚¤ãƒ™ãƒ³ãƒˆç™»éŒ²ãƒ¡ã‚½ãƒƒãƒ‰
 var addListener = ( function(){	
 	if( document.addEventListener ){
 		return function( element, type, callback ){
@@ -18,8 +18,8 @@ var addListener = ( function(){
 	}
 })();
 
-//ƒ}ƒEƒX‚ÌÀ•W
-//‚±ª‚±«‚Ì‚ğQl‚É
+//ãƒã‚¦ã‚¹ã®åº§æ¨™
+//ã“â†‘ã“â†“ã®ã‚’å‚è€ƒã«
 //http://www12.atpages.jp/~nekomike/blog/2011/08/18/javascript-%E3%82%A4%E3%83%99%E3%83%B3%E3%83%88%E6%95%B4%E7%90%861-%EF%BC%88%E3%83%9E%E3%82%A6%E3%82%B9%E3%82%A4%E3%83%99%E3%83%B3%E3%83%88%E7%B7%A8%EF%BC%89/
 window_info = function(){
     var wininfo = {};
@@ -73,8 +73,8 @@ MouseMoveF = function(e){
 	gMouse.Y = e.clientY + wininfo.vertical_scroll - get_mouseY(el);
 };
 
-//ƒNƒŠƒbƒNƒCƒxƒ“ƒg‚ÉŒÄ‚Ño‚·ƒƒ\ƒbƒh
-//ƒNƒŠƒbƒNƒtƒ‰ƒO‚ğOn‚É‚·‚é
+//ã‚¯ãƒªãƒƒã‚¯ã‚¤ãƒ™ãƒ³ãƒˆæ™‚ã«å‘¼ã³å‡ºã™ãƒ¡ã‚½ãƒƒãƒ‰
+//ã‚¯ãƒªãƒƒã‚¯ãƒ•ãƒ©ã‚°ã‚’Onã«ã™ã‚‹
 var MouseClickF = function(e){
 	switch( e.button ){
 		case 0:
@@ -89,12 +89,12 @@ function Mouse( element ){
 	
 	var LClick = false;
 	
-	//ƒ}ƒEƒX‚Ìó‘Ô‚ğXV‚·‚é‚½‚ß‚É‚PƒtƒŒ[ƒ€–ˆ‚ÉŒÄ‚Ô
+	//ãƒã‚¦ã‚¹ã®çŠ¶æ…‹ã‚’æ›´æ–°ã™ã‚‹ãŸã‚ã«ï¼‘ãƒ•ãƒ¬ãƒ¼ãƒ æ¯ã«å‘¼ã¶
 	this.update = function(){
 		if( this.LClick ) this.LClick = false;
 	}
 	
-	//ƒCƒxƒ“ƒg“o˜^	
+	//ã‚¤ãƒ™ãƒ³ãƒˆç™»éŒ²	
 	addListener( element, "mousemove", MouseMoveF );
 	addListener( element, "click", MouseClickF );
 }
